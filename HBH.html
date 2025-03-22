@@ -1,0 +1,226 @@
+<!DOCTYPE html><html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>e-Greetings</title>
+    <style>
+        /* Internal CSS */
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            position: relative;
+        }
+        
+        .bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("./HBH-BG.jpg");
+            background-size: cover;
+            background-position: center;
+            opacity: 0.5;
+            z-index: -1;
+        }
+        
+        .content {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            color: #333;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1, h2 {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        h1 {
+            color: #ff4081;
+        }
+        
+        h2 {
+            color: #7e57c2;
+        }
+        
+        .audio-controls {
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        /* Modal styling */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal-title {
+            font-size: 28px;
+            color: #ff4081;
+            margin-bottom: 20px;
+        }
+        
+        .modal-button {
+            background-color: #ff4081;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        
+        .modal-button:hover {
+            background-color: #e91e63;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Image -->
+    <div class="bg-container" aria-hidden="true"></div>
+    
+    <!-- Modal Overlay -->
+    <div id="modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-content">
+            <h2 id="modal-title" class="modal-title">Happy Birthday Gaggu Sira!</h2>
+            <p>Click the button below to start the celebration</p>
+            <div id="audio-container">
+                <audio id="intro-audio" controls>
+                    <source src="./Intro_HBH.m4a" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+            <button id="lets-go-btn" class="modal-button">Let's Go</button>
+        </div>
+    </div>
+    
+    <!-- Main Content (initially hidden) -->
+    <div id="main-content" class="content hidden">
+        <h1>
+            An Ode of Love to My Sweet Heart
+        </h1>
+        <div>
+        <span class="audio-controls">
+                <audio id="header-audio" controls>
+                    <source src="./HBDH.m4a" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+                <button aria-label="Play header audio" class="play-btn" data-audio="header-audio">Play</button>
+                <button aria-label="Pause header audio" class="pause-btn" data-audio="header-audio">Pause</button>
+            </span>
+        </div>    
+        
+        <h2>
+            Encapsulating Our Wonderful Journey of Togetherness
+        </h2>
+ <div>
+            <span class="audio-controls">
+                <audio id="wishes-audio" controls>
+                    <source src="./J_T.m4a" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+                <button aria-label="Play wishes audio" class="play-btn" data-audio="wishes-audio">Play</button>
+                <button aria-label="Pause wishes audio" class="pause-btn" data-audio="wishes-audio">Pause</button>
+            </span>
+        </div>
+        
+        
+        <p>Wishing you a fantastic year filled with joy, laughter, and beautiful memories!</p>
+        
+        <h2>
+            A Tribute to the "___est" Person 
+        </h2>
+            <div>
+            <span class="audio-controls">
+                <audio id="message-audio" controls>
+                    <source src="./Tribute_HBH.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+                <button aria-label="Play message audio" class="play-btn" data-audio="message-audio">Play</button>
+                <button aria-label="Pause message audio" class="pause-btn" data-audio="message-audio">Pause</button>
+            </span>
+        </div>
+        
+        
+        <p>May all your dreams come true and may this year bring you endless happiness!</p>
+    </div>
+    
+    <script>
+        // JavaScript for functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('modal');
+            const mainContent = document.getElementById('main-content');
+            const letsGoBtn = document.getElementById('lets-go-btn');
+            const introAudio = document.getElementById('intro-audio');
+            
+            // Try to autoplay the intro audio
+            try {
+                introAudio.play().catch(function(error) {
+                    console.log("Autoplay prevented by browser, showing controls instead");
+                    introAudio.controls = true;
+                });
+            } catch (e) {
+                console.log("Autoplay error: ", e);
+                introAudio.controls = true;
+            }
+            
+            // When the "Let's Go" button is clicked
+            letsGoBtn.addEventListener('click', function() {
+                modal.classList.add('hidden');
+                mainContent.classList.remove('hidden');
+                introAudio.pause(); // Stop the intro audio when modal is closed
+            });
+            
+            // Play and pause buttons functionality
+            const playButtons = document.querySelectorAll('.play-btn');
+            const pauseButtons = document.querySelectorAll('.pause-btn');
+            
+            playButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    const audioId = this.getAttribute('data-audio');
+                    const audio = document.getElementById(audioId);
+                    audio.play();
+                });
+            });
+            
+            pauseButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    const audioId = this.getAttribute('data-audio');
+                    const audio = document.getElementById(audioId);
+                    audio.pause();
+                });
+            });
+        });
+    </script>
+</body>
+</html>
